@@ -45,7 +45,6 @@
 #include "Type.h"
 #include "SafeOpFlags.h"
 #include "CGOptions.h"
-#include "MspFilters.h"
 #include "VectorFilter.h"
 #include "random.h"
 
@@ -192,9 +191,7 @@ GroupProbElem::~GroupProbElem()
 {
 	std::map<ProbName, SingleProbElem*>::iterator i;
 	for (i = probs_.begin(); i != probs_.end(); ++i) {
-		SingleProbElem *elem = (*i).second;
-		assert(elem);
-		delete elem;
+		delete i->second;
 	}
 	probs_.clear();
 }
@@ -381,10 +378,8 @@ Probabilities::GetInstance()
 void
 Probabilities::DestroyInstance()
 {
-	if (Probabilities::instance_) {
-		delete Probabilities::instance_;
-		Probabilities::instance_ = NULL;
-	}
+	delete instance_;
+	instance_ = NULL;
 }
 
 void
@@ -863,15 +858,6 @@ Probabilities::unregister_extra_filter(ProbName pname, Filter *filter)
 void
 Probabilities::set_extra_filters(ProbName pname)
 {
-	if (CGOptions::msp()) {
-		switch(pname) {
-		case pBinaryOpsProb:
-			extra_filters_[pname] = new MspBinaryFilter();
-			break;
-		default:
-			break;
-		}
-	}
 }
 
 bool

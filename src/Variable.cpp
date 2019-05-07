@@ -72,7 +72,6 @@
 
 
 using namespace std;
-// Yang: I changed the definition of ctrl_vars, and ReducerMgr might be affected
 std::vector< std::vector<const Variable*>* > Variable::ctrl_vars_vectors;
 unsigned long Variable::ctrl_vars_count;
 
@@ -474,10 +473,7 @@ Variable::~Variable(void)
 	for(i = field_vars.begin(); i != field_vars.end(); ++i)
 		delete (*i);
 	field_vars.clear();
-	if (init) {
-		delete init;
-		init = NULL;
-	}
+	delete init;
 }
 
 // --------------------------------------------------------------
